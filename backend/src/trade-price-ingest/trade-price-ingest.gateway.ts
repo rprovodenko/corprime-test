@@ -30,12 +30,9 @@ export class TradePriceIngestGateway implements OnGatewayConnection {
     console.log(sockets);
   }
 
-  @SubscribeMessage('newMessage')
+  @SubscribeMessage('trade-price')
   onNewMessage(@MessageBody() body: any) {
     console.log(body);
-    this.server.emit('onMessage', {
-      msg: 'New Message',
-      content: body,
-    });
+    // TODO: validate
   }
 }

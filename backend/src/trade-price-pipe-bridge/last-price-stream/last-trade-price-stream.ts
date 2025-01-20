@@ -1,4 +1,4 @@
-import { Trade } from '../common/Trade';
+import { Trade } from '../../common/Trade';
 import { Transform } from 'stream';
 
 export class LastTradePriceStream extends Transform {
@@ -23,7 +23,7 @@ export class LastTradePriceStream extends Transform {
       }
 
       if (this.isWithinCurrentWindow(trade.timestamp)) {
-        console.log("---herexxx")
+        console.log('---herexxx');
         this.currentLatestTimestamp = trade.timestamp;
         this.currentLastPrice = trade.price;
         return callback();
@@ -50,7 +50,7 @@ export class LastTradePriceStream extends Transform {
       this.window === 'second'
         ? this.getEndOfCurrentSecond()
         : this.getEndOfCurrentMinute();
-    console.log({endOfCurrentWindow, timestamp})
+    console.log({ endOfCurrentWindow, timestamp });
     return endOfCurrentWindow >= timestamp;
   }
 

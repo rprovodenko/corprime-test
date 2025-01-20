@@ -1,13 +1,13 @@
 import { LastTradePriceStream } from './last-trade-price-stream';
 import { Readable } from 'stream';
-import { Trade } from '../common/Trade';
+import { Trade } from '../../common/Trade';
 import { pipeline } from 'stream/promises';
 import { TestSink } from './test-sink';
 
-describe('LastTradePriceStream - minutes', () => {
-  let lastPriceStream = new LastTradePriceStream('minute');
+describe('LastTradePriceStream - seconds', () => {
+  let lastPriceStream = new LastTradePriceStream('second');
   beforeEach(async () => {
-    lastPriceStream = new LastTradePriceStream('minute');
+    lastPriceStream = new LastTradePriceStream('second');
   });
 
   it('should return one trade price', async () => {
@@ -22,25 +22,20 @@ describe('LastTradePriceStream - minutes', () => {
         price: 2,
         timestamp: new Date('2025-01-20T16:25:05.852Z').getTime(),
       },
-      {
-        ticker: 'BTC',
-        price: 3,
-        timestamp: new Date('2025-01-20T16:26:05.852Z').getTime(),
-      },
     ]);
     const sink = new TestSink();
     await pipeline(dataStream, lastPriceStream, sink);
     expect(sink.result).toMatchInlineSnapshot(`
       [
         {
-          "price": 2,
-          "timestamp": 1737390305852,
+          "price": 1,
+          "timestamp": 1737390304852,
         },
       ]
     `);
   });
 
-  it('should return two trade prices - for two minutes', async () => {
+  it('should return one trade price - scenario with multiple trades for the same second', async () => {
     const dataStream = Readable.from(<Trade[]>[
       {
         ticker: 'BTC',
@@ -49,13 +44,23 @@ describe('LastTradePriceStream - minutes', () => {
       },
       {
         ticker: 'BTC',
-        price: 6,
-        timestamp: new Date('2025-01-20T16:26:05.252Z').getTime(),
+        price: 0.5,
+        timestamp: new Date('2025-01-20T16:25:04.352Z').getTime(),
+      },
+      {
+        ticker: 'BTC',
+        price: 4,
+        timestamp: new Date('2025-01-20T16:25:04.452Z').getTime(),
+      },
+      {
+        ticker: 'BTC',
+        price: 1,
+        timestamp: new Date('2025-01-20T16:25:04.852Z').getTime(),
       },
       {
         ticker: 'BTC',
         price: 2,
-        timestamp: new Date('2025-01-20T16:27:06.852Z').getTime(),
+        timestamp: new Date('2025-01-20T16:25:05.852Z').getTime(),
       },
     ]);
     const sink = new TestSink();
@@ -64,11 +69,51 @@ describe('LastTradePriceStream - minutes', () => {
       [
         {
           "price": 1,
-          "timestamp": 1737390304152,
+          "timestamp": 1737390304852,
+        },
+      ]
+    `);
+  });
+
+  it('should return two trade prices - for two seconds', async () => {
+    const dataStream = Readable.from(<Trade[]>[
+      {
+        ticker: 'BTC',
+        price: 1,
+        timestamp: new Date('2025-01-20T16:25:04.152Z').getTime(),
+      },
+      {
+        ticker: 'BTC',
+        price: 1,
+        timestamp: new Date('2025-01-20T16:25:04.852Z').getTime(),
+      },
+      {
+        ticker: 'BTC',
+        price: 6,
+        timestamp: new Date('2025-01-20T16:25:05.252Z').getTime(),
+      },
+      {
+        ticker: 'BTC',
+        price: 2,
+        timestamp: new Date('2025-01-20T16:25:05.552Z').getTime(),
+      },
+      {
+        ticker: 'BTC',
+        price: 2,
+        timestamp: new Date('2025-01-20T16:25:06.852Z').getTime(),
+      },
+    ]);
+    const sink = new TestSink();
+    await pipeline(dataStream, lastPriceStream, sink);
+    expect(sink.result).toMatchInlineSnapshot(`
+      [
+        {
+          "price": 1,
+          "timestamp": 1737390304852,
         },
         {
-          "price": 6,
-          "timestamp": 1737390365252,
+          "price": 2,
+          "timestamp": 1737390305552,
         },
       ]
     `);
@@ -89,12 +134,7 @@ describe('LastTradePriceStream - minutes', () => {
       {
         ticker: 'BTC',
         price: 8,
-        timestamp: new Date('2025-01-20T16:25:03.252Z').getTime(),
-      },
-      {
-        ticker: 'BTC',
-        price: 10,
-        timestamp: new Date('2025-01-20T16:26:05.252Z').getTime(),
+        timestamp: new Date('2025-01-20T16:25:05.252Z').getTime(),
       },
     ]);
     const sink = new TestSink();
@@ -109,7 +149,7 @@ describe('LastTradePriceStream - minutes', () => {
     `);
   });
 
-  it('should tolerate a gap in minutes', async () => {
+  it('should tolerate a gap in seconds', async () => {
     const dataStream = Readable.from(<Trade[]>[
       {
         ticker: 'BTC',
@@ -119,12 +159,12 @@ describe('LastTradePriceStream - minutes', () => {
       {
         ticker: 'BTC',
         price: 1,
-        timestamp: new Date('2025-01-20T16:28:04.852Z').getTime(),
+        timestamp: new Date('2025-01-20T16:25:04.852Z').getTime(),
       },
       {
         ticker: 'BTC',
         price: 8,
-        timestamp: new Date('2025-01-20T16:30:05.252Z').getTime(),
+        timestamp: new Date('2025-01-20T16:25:05.252Z').getTime(),
       },
     ]);
     const sink = new TestSink();
@@ -137,7 +177,7 @@ describe('LastTradePriceStream - minutes', () => {
         },
         {
           "price": 1,
-          "timestamp": 1737390484852,
+          "timestamp": 1737390304852,
         },
       ]
     `);
