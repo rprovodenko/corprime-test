@@ -6,6 +6,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { EventEmitter } from 'stream';
 
 @WebSocketGateway({
   cors: {
@@ -13,7 +14,10 @@ import { Server } from 'socket.io';
   },
   namespace: '/ingest-trade-price',
 })
-export class TradePriceIngestGateway implements OnGatewayConnection {
+export class TradePriceIngestGateway
+  extends EventEmitter
+  implements OnGatewayConnection
+{
   @WebSocketServer()
   server: Server;
 
@@ -34,5 +38,6 @@ export class TradePriceIngestGateway implements OnGatewayConnection {
   onNewMessage(@MessageBody() body: any) {
     console.log(body);
     // TODO: validate
+    this.emit('trade-price', body);
   }
 }

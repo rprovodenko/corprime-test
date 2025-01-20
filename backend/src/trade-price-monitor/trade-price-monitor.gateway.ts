@@ -6,6 +6,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { Trade } from '../common/Trade';
 
 @WebSocketGateway({
   cors: {
@@ -30,12 +31,16 @@ export class TradePriceMonitorGateway implements OnGatewayConnection {
     console.log(sockets);
   }
 
-  @SubscribeMessage('newMessage')
-  onNewMessage(@MessageBody() body: any) {
-    console.log(body);
+  public emitNewLastSecondPrice(tradePrice: Trade) {
     this.server.emit('onMessage', {
-      msg: 'New Message',
-      content: body,
+      msg: 'last-trade-price-per-sec-btc',
+      content: tradePrice,
+    });
+  }
+  public emitNewLastMinutePrice(tradePrice: Trade) {
+    this.server.emit('onMessage', {
+      msg: 'last-trade-price-per-min-btc',
+      content: tradePrice,
     });
   }
 }
