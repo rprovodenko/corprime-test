@@ -22,5 +22,7 @@ Limitations:
 - no IaC
 - 
 
-Legend:
-This is a UI for displaying exchange prices for various cryptocurrencies in USD 
+Legend/assumptions:
+This is a UI for displaying exchange prices for BTC in USD. 
+The ingestion gateway assumes the ingester sends trades in non-decreasing order timestamp-wise (older trades than the most recent trade are ignored).
+
