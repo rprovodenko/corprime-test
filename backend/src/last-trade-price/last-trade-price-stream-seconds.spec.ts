@@ -1,13 +1,13 @@
-import { LastTradePriceSecondStream } from './last-trade-price-second-stream';
+import { LastTradePriceStream } from './last-trade-price-stream';
 import { Readable } from 'stream';
 import { Trade } from '../common/Trade';
 import { pipeline } from 'stream/promises';
 import { TestSink } from './test-sink';
 
-describe('TradePriceIngestGateway', () => {
-  let lastPriceStream = new LastTradePriceSecondStream();
+describe('LastTradePriceStream - seconds', () => {
+  let lastPriceStream = new LastTradePriceStream("second");
   beforeEach(async () => {
-    lastPriceStream = new LastTradePriceSecondStream();
+    lastPriceStream = new LastTradePriceStream("second");
   });
 
   it('should return one trade price', async () => {
