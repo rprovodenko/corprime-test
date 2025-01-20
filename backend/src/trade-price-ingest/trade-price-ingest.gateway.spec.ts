@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ReceiveTradePriceGateway } from './receive-trade-price.gateway';
+import { TradePriceIngestGateway } from './trade-price-ingest.gateway';
 
 describe('ReceiveTradePriceGateway', () => {
-  let gateway: ReceiveTradePriceGateway;
+  let gateway: TradePriceIngestGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ReceiveTradePriceGateway],
+      providers: [TradePriceIngestGateway],
     }).compile();
 
-    gateway = module.get<ReceiveTradePriceGateway>(ReceiveTradePriceGateway);
+    gateway = module.get<TradePriceIngestGateway>(TradePriceIngestGateway);
   });
 
   it('should be defined', () => {

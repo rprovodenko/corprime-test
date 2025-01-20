@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ReceiveTradePriceGateway } from './receive-trade-price/receive-trade-price.gateway';
+import { TradePriceIngestGateway } from './trade-price-ingest/trade-price-ingest.gateway';
 
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [AppService, ReceiveTradePriceGateway],
+  providers: [AppService, TradePriceIngestGateway],
 })
 export class AppModule {}
