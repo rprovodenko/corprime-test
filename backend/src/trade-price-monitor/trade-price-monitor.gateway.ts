@@ -19,28 +19,16 @@ export class TradePriceMonitorGateway implements OnGatewayConnection {
   server: Server;
 
   onModuleInit() {
-    console.log('----herexxx');
-    this.server.on('connection', (socket) => {
-      console.log(socket.id);
-      console.log('Connected');
-    });
+    this.server.on('connection', (socket) => {});
   }
   handleConnection(client: any, ...args: any[]) {
     const { sockets } = this.server.sockets;
-
-    console.log(sockets);
   }
 
   public emitNewLastSecondPrice(tradePrice: Trade) {
-    this.server.emit('onMessage', {
-      msg: 'last-trade-price-per-sec-btc',
-      content: tradePrice,
-    });
+    this.server.emit('last-trade-price-per-sec-btc', tradePrice);
   }
   public emitNewLastMinutePrice(tradePrice: Trade) {
-    this.server.emit('onMessage', {
-      msg: 'last-trade-price-per-min-btc',
-      content: tradePrice,
-    });
+    this.server.emit('last-trade-price-per-min-btc', tradePrice);
   }
 }

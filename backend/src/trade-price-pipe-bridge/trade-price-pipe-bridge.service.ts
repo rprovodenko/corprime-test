@@ -17,6 +17,7 @@ export class TradePricePipeBridgeService {
       this.handleNewTradePrice(trade),
     );
     void this.pushLastTradeSecondsToMonitor();
+    void this.pushLastTradeMinutesToMonitor();
   }
 
   private handleNewTradePrice(trade: Trade) {
@@ -28,6 +29,11 @@ export class TradePricePipeBridgeService {
   private async pushLastTradeSecondsToMonitor() {
     for await (const trade of this.lastPriceSecondsStream) {
       this.monitorGateway.emitNewLastSecondPrice(trade);
+    }
+  }
+  private async pushLastTradeMinutesToMonitor() {
+    for await (const trade of this.lastPriceMinutesStream) {
+      this.monitorGateway.emitNewLastMinutePrice(trade);
     }
   }
 }

@@ -6,11 +6,12 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { Trade } from '../common/Trade';
 import { EventEmitter } from 'stream';
 
 @WebSocketGateway({
   cors: {
-    origin: '*', // Adjust the origin for your use case
+    origin: '*', // TODO ?
   },
   namespace: '/ingest-trade-price',
 })
@@ -22,22 +23,17 @@ export class TradePriceIngestGateway
   server: Server;
 
   onModuleInit() {
-    console.log('----herexxx');
-    this.server.on('connection', (socket) => {
-      console.log(socket.id);
-      console.log('Connected');
-    });
+    this.server.on('connection', (socket) => {});
   }
   handleConnection(client: any, ...args: any[]) {
     const { sockets } = this.server.sockets;
-
-    console.log(sockets);
   }
 
   @SubscribeMessage('trade-price')
-  onNewMessage(@MessageBody() body: any) {
-    console.log(body);
-    // TODO: validate
-    this.emit('trade-price', body);
+  onNewMessage(@MessageBody() trade: unknown) {
+    if (!Trade.guard(trade)) {
+      return;
+    }
+    this.emit('trade-price', trade);
   }
 }
