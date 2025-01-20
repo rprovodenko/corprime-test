@@ -4,9 +4,10 @@ import { INestApplication } from '@nestjs/common';
 import { io, Socket } from 'socket.io-client';
 
 jest.setTimeout(60000);
-describe('Trade price lifecycle', () => {
+describe('Trade price pipeline', () => {
   let app: INestApplication;
   let ingestSocket: Socket;
+  let monitorSocket: Socket;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -23,6 +24,12 @@ describe('Trade price lifecycle', () => {
         res();
       });
     });
+    monitorSocket = io(`${await app.getUrl()}/monitor-trade-price`);
+    await new Promise<void>((res, rej) => {
+      monitorSocket.on('connect', () => {
+        res();
+      });
+    });
   });
   afterEach(async () => {
     ingestSocket.disconnect();
@@ -30,11 +37,16 @@ describe('Trade price lifecycle', () => {
     await app.close();
   });
 
-  it('should allow ingesting a trade price', async () => {
+  it('should allow ingesting a trade price and then reading it', async () => {
+    const p = new Promise((res, rej) => {
+      monitorSocket.on('last-trade-price-per-sec-btc', res);
+    });
     ingestSocket.emit('trade-price', {
       ticker: 'BTC',
       priceUsd: 109123.21,
       timestamp: new Date().getTime(),
     });
+    const result = <any>await p;
+    expect(result.timestamp).toEqual('...');
   });
 });
