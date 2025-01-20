@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TradePriceIngestGateway } from './trade-price-ingest.gateway';
 
-describe('ReceiveTradePriceGateway', () => {
+describe('TradePriceIngestGateway', () => {
   let gateway: TradePriceIngestGateway;
 
   beforeEach(async () => {
