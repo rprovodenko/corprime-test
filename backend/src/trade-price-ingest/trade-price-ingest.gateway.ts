@@ -1,11 +1,8 @@
 import {
   MessageBody,
-  OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
 import { Trade } from '../common/Trade';
 import { EventEmitter } from 'stream';
 
@@ -15,20 +12,7 @@ import { EventEmitter } from 'stream';
   },
   namespace: '/ingest-trade-price',
 })
-export class TradePriceIngestGateway
-  extends EventEmitter
-  implements OnGatewayConnection
-{
-  @WebSocketServer()
-  server: Server;
-
-  onModuleInit() {
-    this.server.on('connection', (socket) => {});
-  }
-  handleConnection(client: any, ...args: any[]) {
-    const { sockets } = this.server.sockets;
-  }
-
+export class TradePriceIngestGateway extends EventEmitter {
   @SubscribeMessage('trade-price')
   onNewMessage(@MessageBody() trade: unknown) {
     if (!Trade.guard(trade)) {

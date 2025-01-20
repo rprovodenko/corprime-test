@@ -1,10 +1,4 @@
-import {
-  MessageBody,
-  OnGatewayConnection,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { Trade } from '../common/Trade';
 
@@ -14,16 +8,9 @@ import { Trade } from '../common/Trade';
   },
   namespace: '/monitor-trade-price',
 })
-export class TradePriceMonitorGateway implements OnGatewayConnection {
+export class TradePriceMonitorGateway {
   @WebSocketServer()
   server: Server;
-
-  onModuleInit() {
-    this.server.on('connection', (socket) => {});
-  }
-  handleConnection(client: any, ...args: any[]) {
-    const { sockets } = this.server.sockets;
-  }
 
   public emitNewLastSecondPrice(tradePrice: Trade) {
     this.server.emit('last-trade-price-per-sec-btc', tradePrice);
