@@ -1,11 +1,8 @@
-import './App.css'
+import './App.css';
 import Graph from './graph/Graph';
 
-
 function App() {
-  return (
-    <Graph></Graph>
-  )
+  return <Graph></Graph>;
 }
 
-export default App
+export default App;
