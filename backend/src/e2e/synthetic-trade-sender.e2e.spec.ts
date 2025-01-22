@@ -4,11 +4,13 @@ import { INestApplication } from '@nestjs/common';
 import { io, Socket } from 'socket.io-client';
 import { setTimeout } from 'timers/promises';
 import { SyntheticTradeSender } from '../synthetic-trade-sender/synthetic-trade-sender';
-jest.setTimeout(60000);
+
+jest.setTimeout(63000);
 describe('Synthetic trade sender', () => {
   let app: INestApplication;
   let ingestSocket: Socket;
   let monitorSocket: Socket;
+  let tradeSender: SyntheticTradeSender;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -31,12 +33,20 @@ describe('Synthetic trade sender', () => {
         res();
       });
     });
+
+    tradeSender = new SyntheticTradeSender(
+        `${await app.getUrl()}/ingest-trade-price`,
+      );
   });
   afterEach(async () => {
     ingestSocket.disconnect();
     ingestSocket.close();
+
     monitorSocket.disconnect();
     monitorSocket.close();
+
+    tradeSender.stopSending();
+    tradeSender.close();
     await app.close();
   });
 
@@ -51,9 +61,6 @@ describe('Synthetic trade sender', () => {
       tradesPerMin.push(t),
     );
 
-    const tradeSender = new SyntheticTradeSender(
-      `${await app.getUrl()}/ingest-trade-price`,
-    );
     tradeSender.startSending();
     await setTimeout(61000);
 
