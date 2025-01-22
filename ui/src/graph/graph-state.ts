@@ -1,17 +1,17 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-interface State {
+interface GraphState {
   dataPerSec: Array<[number, number]>;
   dataPerMin: Array<[number, number]>;
 }
-interface StateActions {
+interface GraphStateActions {
     appendDataPointPerSec: (dataPoint: [number, number]) => void;
     appendDataPointPerMin: (dataPoint: [number, number]) => void;
 }
 
 export const useGraphState = create<
-  State & StateActions
+  GraphState & GraphStateActions
 >()(
   immer((set, get) => ({
     dataPerSec: [],
