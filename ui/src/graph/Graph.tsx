@@ -2,40 +2,12 @@ import { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useGraphState } from './graph-state';
 import { io } from 'socket.io-client';
-import { Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { getGraphOptions } from './get-graph-options';
 
-function getOptions(data: Array<[number, number]>) {
-  return {
-    grid: {
-      top: 30,
-      left: 50,
-      right: 0,
-      bottom: 30,
-    },
-    tooltip: {
-      trigger: 'axis',
-    },
-    xAxis: {
-      type: 'time',
-      boundaryGap: false,
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        name: 'BTC',
-        type: 'line',
-        smooth: true,
-        showSymbol: false,
-        data,
-      },
-    ],
-  };
-}
 
 function Graph() {
-  const [options, setOptions] = useState(getOptions([]));
+  const [options, setOptions] = useState(getGraphOptions([]));
 
   const appendDataPointPerSec = useGraphState((s) => s.appendDataPointPerSec);
   const appendDataPointPerMin = useGraphState((s) => s.appendDataPointPerMin);
@@ -43,7 +15,7 @@ function Graph() {
   const dataPerSec = useGraphState((s) => s.dataPerSec);
   const dataPerMin = useGraphState((s) => s.dataPerMin);
 
-  const [timeSliceType, setTimeSliceType] = useState('seconds');
+  const [timeSliceType, setTimeSliceType] = useState<'second' | 'minute'>('second');
 
   useEffect(() => {
     const monitorUrl = import.meta.env.VITE_MONITOR_URL;
@@ -53,12 +25,12 @@ function Graph() {
 
     // Listen for connection events
     socket.on('connect', () => {
-      console.log(`Connected with id: ${socket.id}`);
+      console.info(`Connected with id: ${socket.id}`);
     });
 
     // Listen for custom events
     socket.on('last-trade-price-per-sec-btc', (tradePrice) => {
-      console.log('Last second trade price:', tradePrice);
+      // console.log('Last second trade price:', tradePrice);
       const dataPoint = [tradePrice.timestamp, tradePrice.price] as [
         number,
         number,
@@ -66,9 +38,18 @@ function Graph() {
       appendDataPointPerSec(dataPoint);
     });
 
+    socket.on('last-trade-price-per-min-btc', (tradePrice) => {
+      // console.log('Last second trade price:', tradePrice);
+      const dataPoint = [tradePrice.timestamp, tradePrice.price] as [
+        number,
+        number,
+      ];
+      appendDataPointPerMin(dataPoint);
+    });
+
     // Handle disconnection
     socket.on('disconnect', () => {
-      console.log('Disconnected from server');
+      console.info('Disconnected from server');
     });
 
     socket.on('connect_error', (e) => {
@@ -77,26 +58,34 @@ function Graph() {
         `SyntheticTradeSender will attempt to reconnect: ${socket.active}`,
       );
     });
-  }, [appendDataPointPerSec]);
+  }, [appendDataPointPerSec, appendDataPointPerMin]);
 
   useEffect(() => {
-    if (timeSliceType === 'seconds') {
-      console.log('---herexx');
-      console.log(dataPerSec);
-      setOptions(getOptions(dataPerSec));
+    if (timeSliceType === 'second') {
+      setOptions(getGraphOptions(dataPerSec));
     }
+    setOptions(getGraphOptions(dataPerMin))
   }, [dataPerSec, dataPerMin, timeSliceType]);
 
   return (
     <div style={{ padding: '0px 20px' }}>
       <Typography variant="h3">BTC to USD price chart</Typography>
+      <Box         style={{ padding: '30px 0 0 0' }} display={'flex'}  alignItems="center" gap={2} justifyContent="flex-end">
       <Typography
         variant="body1"
-        align="right"
-        style={{ padding: '30px 0 0 0' }}
       >
-        Price of the last trade for every second/minute
+        Price of the last trade for every
       </Typography>
+      <Select
+          labelId="time-slice-select"
+          value={timeSliceType}
+          onChange={(e) => setTimeSliceType(e.target.value as 'second' | 'minute')}
+        >
+          <MenuItem value={'second'}>Second</MenuItem>
+          <MenuItem value={'minute'}>Minute</MenuItem>
+        </Select>
+      </Box>
+
       <ReactECharts
         option={options}
         style={{ height: '400px', width: '100%' }}
