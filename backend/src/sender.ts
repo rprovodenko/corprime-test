@@ -1,5 +1,6 @@
 import { SyntheticTradeSender } from './synthetic-trade-sender/synthetic-trade-sender';
 
+// TODO create config
 const sender = new SyntheticTradeSender('http://localhost:3000/ingest-trade-price');
 
 

@@ -59,11 +59,11 @@ The speedrun mode is used to stress test the UI as it is updated 100 times faste
 ## Discussion on performance
 
 Humans are slower than computers and I'm not sure if it would make sense to build graphs that display data in sub-second speed (although my solution can do that).
-Furthermore I'm not sure how useful it would be to display more data points (longer time windows) on the graph. If user is zooming out he likely wouldn't see more value is higher detailization. If user is zooming in, than he's reducing the time window (and hence the amount of data points).
+Furthermore I'm not sure how useful it would be to display more data points (longer time windows) on the graph. If user is zooming out he likely wouldn't see more value is higher detailization. If user is zooming in, then he's reducing the time window (and hence the amount of data points).
 
 In any case, there are a number of different techniques that can be used for further optimisation, but I would need to know the use case we're optimising for.
 
-Maybe sometimes there are spikes that would be lost if the level of detailization is too small (e.g. a minute, instead of a second).
+Maybe sometimes there are spikes that would be lost if the level of detailization is too small (e.g. a minute, instead of a second) - (?)
 
 ## Notes on the backend design
 
@@ -118,7 +118,7 @@ Start backend:
 ```
 cd backend
 npm i
-npm run test
+npm run test # will take 2-3 minutes
 npm run start:dev
 ```
 Start sending synthetic trades:

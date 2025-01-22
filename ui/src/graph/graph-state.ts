@@ -14,7 +14,7 @@ const maxSeconds = Number(import.meta.env.VITE_MAX_SECONDS);
 const maxMinutes = Number(import.meta.env.VITE_MAX_MINUTES);
 
 export const useGraphState = create<GraphState & GraphStateActions>()(
-  immer((set, get) => ({
+  immer((set, _get) => ({
     dataPerSec: [],
     dataPerMin: [],
     appendDataPointsPerSec: (dataPoints: [number, number][]) =>
