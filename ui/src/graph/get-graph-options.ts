@@ -1,5 +1,3 @@
-
-
 export function getGraphOptions(data: Array<[number, number]>) {
   return {
     grid: {
