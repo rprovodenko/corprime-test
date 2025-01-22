@@ -2,8 +2,10 @@ import { SyntheticTradeSender } from './synthetic-trade-sender/synthetic-trade-s
 
 const sender = new SyntheticTradeSender('http://localhost:3000/ingest-trade-price');
 
+
 async function runSender() {
-  await sender.startSending();
+  const speedrun = process.argv[2] === "--speed-run";
+  await sender.startSending(speedrun);
 }
 
 process.on('SIGINT', () => {

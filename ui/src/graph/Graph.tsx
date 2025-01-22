@@ -18,6 +18,7 @@ function Graph() {
   useEffect(() => {
     if (timeSliceType === 'second') {
       setOptions(getGraphOptions(dataPerSec));
+      return;
     }
     setOptions(getGraphOptions(dataPerMin));
   }, [dataPerSec, dataPerMin, timeSliceType]);
