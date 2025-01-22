@@ -21,7 +21,7 @@ export class TradePricePipeBridgeService {
   }
 
   private handleNewTradePrice(trade: Trade) {
-    // TODO: cb?
+    // Note: this should never fail. If it does, we're killing the application
     this.lastPriceSecondsStream.write(trade);
     this.lastPriceMinutesStream.write(trade);
   }

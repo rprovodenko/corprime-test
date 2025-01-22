@@ -11,7 +11,7 @@ import { Socket } from 'socket.io-client';
 
 @WebSocketGateway({
   cors: {
-    origin: '*', // TODO ?
+    origin: '*',
   },
   namespace: '/ingest-trade-price',
 })
