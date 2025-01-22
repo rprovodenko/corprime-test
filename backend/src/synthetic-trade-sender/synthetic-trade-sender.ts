@@ -1,5 +1,5 @@
 import { io, Socket } from 'socket.io-client';
-import { tradeGenerator } from './trade-generator';
+import { tradeGenerator, tradeGeneratorSpeedrun } from './trade-generator';
 
 export class SyntheticTradeSender {
   private ingestSocket: Socket = io(this.ingestUrl);
@@ -7,11 +7,12 @@ export class SyntheticTradeSender {
 
   constructor(private ingestUrl: string) {}
 
-  public async startSending() {
+  public async startSending(speedrun = false) {
     this.isSending = true;
     await this.connect();
+    const tradeGen = !speedrun ? tradeGenerator : tradeGeneratorSpeedrun;
 
-    for await (const trade of tradeGenerator()) {
+    for await (const trade of tradeGen()) {
       this.ingestSocket.emit('trade-price', trade);
 
       if (!this.isSending) {

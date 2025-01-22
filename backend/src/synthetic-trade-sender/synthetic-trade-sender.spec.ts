@@ -57,4 +57,22 @@ describe('Trade generator', () => {
     expect(tradesPerSec.length).toBeGreaterThan(60);
     expect(tradesPerMin.length).toEqual(1);
   });
+
+  it('should support speedrun', async () => {
+    const tradesPerSec = [];
+    monitorSocket.on('last-trade-price-per-sec-btc', (t) =>
+      tradesPerSec.push(t),
+    );
+
+    const tradesPerMin = [];
+    monitorSocket.on('last-trade-price-per-min-btc', (t) =>
+      tradesPerMin.push(t),
+    );
+
+    tradeSender.startSending(true);
+    await setTimeout(10000);
+
+    expect(tradesPerSec.length).toBeGreaterThan(150);
+    expect(tradesPerMin.length).toBeGreaterThan(3);
+  });
 });
