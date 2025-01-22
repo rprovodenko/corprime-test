@@ -20,11 +20,11 @@ export class TradePriceMonitorGateway
   server: Server;
 
   handleConnection(client: Socket) {
-    console.info(`TradePriceIngestGateway: client connected: ${client.id}`);
+    console.info(`TradePriceMonitorGateway: client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.info(`TradePriceIngestGateway: client disconnected: ${client.id}`);
+    console.info(`TradePriceMonitorGateway: client disconnected: ${client.id}`);
   }
 
   public emitNewLastSecondPrice(tradePrice: Trade) {
