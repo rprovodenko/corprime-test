@@ -6,7 +6,7 @@ export function generateNextPrice(
   timeStep: number,
   maxPrice: number,
   minPrice: number,
-  noiseFactor: number = 100,
+  noiseFactor: number = 3000,
 ) {
   const sin = Math.sin(timeStep / 1000000) * (maxPrice - minPrice) + minPrice;
   const noise = Math.random() * noiseFactor;

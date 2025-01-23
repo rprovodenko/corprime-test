@@ -45,7 +45,7 @@ It doesn't aim to generate trades that are plausible from real life/financial/hi
 
 There are two modes of operation of the synthetic data sender. In both modes it generates a trade every 0-9 ms of real time. However:
 - in normal mode: First trade starts at real-time time. Uses real time timestamps (simulates a real time scenario). 1 real time second = 200 trades that happened within the same second.
-- in speedrun mode: Takes an arbitrary start date. Synthetic time "flows" faster. 1 real time second = 200 trades that happened within consecutive 100 seconds.
+- in speedrun mode: Takes an arbitrary start date. Synthetic time "flows" faster. 1 real time second = 200 trades that happened within consecutive 100 seconds. This is only meant for stress testing.
 
 The speedrun mode is used to stress test the UI as it is updated 100 times faster.
 
@@ -64,6 +64,8 @@ Furthermore I'm not sure how useful it would be to display more data points (lon
 In any case, there are a number of different techniques that can be used for further optimisation, but I would need to know the use case we're optimising for.
 
 Maybe sometimes there are spikes that would be lost if the level of detailization is too small (e.g. a minute, instead of a second) - (?)
+
+In any case, there are further optimisation that could be made performance-wise.
 
 ## Notes on the backend design
 
@@ -106,10 +108,10 @@ Code:
 
 ## Usage
 
-For demo go to  <...>
+For demo visit http://24.144.78.145.
 
 
-### Local deployment
+### Local/dev deployment
 Probably not necessary, but that's the version it's been tested with:
 ```
 nvm use 22 
@@ -124,23 +126,23 @@ npm run start:dev
 Start sending synthetic trades:
 ```
 cd backend
-npm run run-sender # or 
-npm run run-sender:speedrun # for a stress test
+npm run run-sender 
 ```
+
 Start the UI:
 ```
 cd ui
 npm i
+cp .env.dev .env
 npm run dev
 ```
 
 Then go the the UI that's been output in the console.
 
-
-TODO
-
-Deployment:
-- UI: DO cdn 
-- backend: DO VPS
-- terraform?
+### Stress testing
+Alternatively, instead of running `run-sender` you can run:
+```
+npm run run-sender:speedrun
+```
+It's there for stress testing, to see where the issues are to do with performance and generally to speed up dev/test cycle. It likely won't give a smooth experience - the UI isn't optmised for it (but could be).
 

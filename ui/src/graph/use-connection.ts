@@ -42,7 +42,7 @@ export const useConnection = () => {
       if (datapointsPerMinBuffer.length > 0) {
         appendDataPointsPerMin(datapointsPerMinBuffer.splice(0));
       }
-    }, 20);
+    }, 50);
 
     socket.on('disconnect', () => {
       console.info('Disconnected from server');
