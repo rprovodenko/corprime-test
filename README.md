@@ -108,7 +108,7 @@ Code:
 
 ## Usage
 
-For demo visit http://24.144.78.145.
+For demo visit https://demo.grrexx.me/.
 
 
 ### Local/dev deployment
@@ -145,4 +145,8 @@ Alternatively, instead of running `run-sender` you can run:
 npm run run-sender:speedrun
 ```
 It's there for stress testing, to see where the issues are to do with performance and generally to speed up dev/test cycle. It likely won't give a smooth experience - the UI isn't optmised for it (but could be).
+
+### Prod/demo deployment
+
+The demo is deployed using nginx, pm2 and a VPS. Should anyone want to recreate that deployment `nginx.conf` is located the root of the repository and should provide all the information required.
 
