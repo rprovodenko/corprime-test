@@ -1,0 +1,7 @@
+{
+    "ssl": {
+      "key": "/etc/letsencrypt/live/demo.grrexx.me/privkey.pem",
+      "cert": "/etc/letsencrypt/live/demo.grrexx.me/fullchain.pem"
+    }
+  }
+  
