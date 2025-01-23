@@ -45,7 +45,7 @@ It doesn't aim to generate trades that are plausible from real life/financial/hi
 
 There are two modes of operation of the synthetic data sender. In both modes it generates a trade every 0-9 ms of real time. However:
 - in normal mode: First trade starts at real-time time. Uses real time timestamps (simulates a real time scenario). 1 real time second = 200 trades that happened within the same second.
-- in speedrun mode: Takes an arbitrary start date. Synthetic time "flows" faster. 1 real time second = 200 trades that happened within consecutive 100 seconds.
+- in speedrun mode: Takes an arbitrary start date. Synthetic time "flows" faster. 1 real time second = 200 trades that happened within consecutive 100 seconds. This is only meant for stress testing.
 
 The speedrun mode is used to stress test the UI as it is updated 100 times faster.
 
@@ -59,11 +59,13 @@ The speedrun mode is used to stress test the UI as it is updated 100 times faste
 ## Discussion on performance
 
 Humans are slower than computers and I'm not sure if it would make sense to build graphs that display data in sub-second speed (although my solution can do that).
-Furthermore I'm not sure how useful it would be to display more data points (longer time windows) on the graph. If user is zooming out he likely wouldn't see more value is higher detailization. If user is zooming in, than he's reducing the time window (and hence the amount of data points).
+Furthermore I'm not sure how useful it would be to display more data points (longer time windows) on the graph. If user is zooming out he likely wouldn't see more value is higher detailization. If user is zooming in, then he's reducing the time window (and hence the amount of data points).
 
 In any case, there are a number of different techniques that can be used for further optimisation, but I would need to know the use case we're optimising for.
 
-Maybe sometimes there are spikes that would be lost if the level of detailization is too small (e.g. a minute, instead of a second).
+Maybe sometimes there are spikes that would be lost if the level of detailization is too small (e.g. a minute, instead of a second) - (?)
+
+In any case, there are further optimisation that could be made performance-wise.
 
 ## Notes on the backend design
 
@@ -106,10 +108,10 @@ Code:
 
 ## Usage
 
-For demo go to  <...>
+For demo visit https://demo.grrexx.me/.
 
 
-### Local deployment
+### Local/dev deployment
 Probably not necessary, but that's the version it's been tested with:
 ```
 nvm use 22 
@@ -118,29 +120,33 @@ Start backend:
 ```
 cd backend
 npm i
-npm run test
+npm run test # will take 2-3 minutes
 npm run start:dev
 ```
 Start sending synthetic trades:
 ```
 cd backend
-npm run run-sender # or 
-npm run run-sender:speedrun # for a stress test
+npm run run-sender 
 ```
+
 Start the UI:
 ```
 cd ui
 npm i
+cp .env.dev .env
 npm run dev
 ```
 
 Then go the the UI that's been output in the console.
 
+### Stress testing
+Alternatively, instead of running `run-sender` you can run:
+```
+npm run run-sender:speedrun
+```
+It's there for stress testing, to see where the issues are to do with performance and generally to speed up dev/test cycle. It likely won't give a smooth experience - the UI isn't optmised for it (but could be).
 
-TODO
+### Prod/demo deployment
 
-Deployment:
-- UI: DO cdn 
-- backend: DO VPS
-- terraform?
+The demo is deployed using nginx, pm2 and a VPS. Should anyone want to recreate that deployment `nginx.conf` is located the root of the repository and should provide all the information required.
 
