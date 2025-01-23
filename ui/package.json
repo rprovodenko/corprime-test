@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start:prod": "pm2 start serve --name ui -- -s dist -l 80",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.tsx\"",
